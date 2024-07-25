@@ -19,8 +19,8 @@ router.post("/signup", async (req, res) => {
   const response = signupSchema.safeParse(userObject);
 
   if (!response.success) {
-    return res.status(411).json({
-      message: "Incorrect inputs",
+    return res.status(422).json({
+      message: "Password <= 5 letters",
     });
   }
 
@@ -29,7 +29,7 @@ router.post("/signup", async (req, res) => {
   });
 
   if (existingUser)
-    return res.status(411).json({
+    return res.status(422).json({
       message: "Email already taken",
     });
 
@@ -44,7 +44,7 @@ router.post("/signup", async (req, res) => {
 
   await Account.create({
     userId,
-    balance: Math.floor(Math.random() * 1000000),
+    balance: 500,
   });
 
   const token = jwt.sign({ userId }, JWT_SECRET);
@@ -81,8 +81,8 @@ router.post("/signin", async (req, res) => {
       token: token,
     });
   } else {
-    res.status(411).json({
-      message: "Error while logging in",
+    res.status(422).json({
+      message: "Please provide valid credentials",
     });
   }
 });

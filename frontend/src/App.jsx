@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 
 function App() {
   const [balance,setBalance]=useState(0);
+  const [token,setToken]=useState(localStorage.getItem('token'));
   useEffect(()=>{
     async function balance(){
       const data=await axios.get("http://localhost:3000/api/v1/account/balance",{
@@ -17,16 +18,17 @@ function App() {
       })
       setBalance(data.data.balance);
     }
-    if(localStorage.getItem('token'))balance();
-  },[])
+    // if(localStorage.getItem('token'))balance();
+    if(token)balance();
+  },[token])
   return (
     <div>
       <BrowserRouter>
         <Routes>
           <Route path="/signup" element={<Signup />} />
-          <Route path="/signin" element={<Signin />} />
+          <Route path="/signin" element={<Signin setToken={setToken} />} />
           {localStorage.getItem('token') && <Route path="/dashboard" element={<Dashboard balance={balance} />} />}
-          <Route path="/send" element={<SendMoney setBalance={setBalance} />} />
+          {localStorage.getItem('token') && <Route path="/send" element={<SendMoney setBalance={setBalance} />} />}
         </Routes>
       </BrowserRouter>
     </div>

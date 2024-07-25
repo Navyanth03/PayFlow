@@ -12,6 +12,7 @@ export const Signup = () => {
   const [lastName, setLastName] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [warning,setWarning]=useState("");
 
   const navigate = useNavigate();
 
@@ -27,6 +28,7 @@ export const Signup = () => {
           title={"First Name"}
           placeholder={"John"}
           type={"text"}
+          value={firstName}
         />
         <InputBox
           onChange={(e) => {
@@ -35,6 +37,7 @@ export const Signup = () => {
           title={"Last Name"}
           placeholder={"Doe"}
           type={"text"}
+          value={lastName}
         />
         <InputBox
           onChange={(e) => {
@@ -43,6 +46,7 @@ export const Signup = () => {
           title={"Email"}
           placeholder={"user@email.com"}
           type={"email"}
+          value={username}
         />
         <InputBox
           onChange={(e) => {
@@ -51,20 +55,27 @@ export const Signup = () => {
           title={"Password"}
           placeholder={"password"}
           type={"password"}
+          value={password}
         />
         <ButtonComponent
           onClick={async () => {
-            const response = await axios.post(
-              "http://localhost:3000/api/v1/user/signup",
-              {
-                username,
-                password,
-                firstName,
-                lastName,
-              }
-            );
-            localStorage.setItem("token", response.data.token);
-            navigate("/dashboard")
+            try {
+              const response = await axios.post(
+                "http://localhost:3000/api/v1/user/signup",
+                {
+                  username,
+                  password,
+                  firstName,
+                  lastName,
+                }
+              );
+              localStorage.setItem("token", response.data.token);
+              setWarning("");
+              navigate("/signin")
+            } catch (error) {
+              setWarning(error.response.data.message);
+              setFirstName("");setLastName("");setUsername("");setPassword("");
+            }
           }}
           text={"Sign up"}
         />
@@ -73,6 +84,7 @@ export const Signup = () => {
           buttonText={"Sign in"}
           to={"/signin"}
         />
+        {warning && <div className="bg-red-400 rounded-md p-2 mt-2">{warning}</div>}
       </div>
     </div>
   );

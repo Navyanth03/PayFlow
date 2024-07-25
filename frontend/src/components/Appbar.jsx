@@ -2,9 +2,9 @@ import { useEffect, useState } from "react"
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-export const Appbar = () => {
+export const Appbar = ({nav,setNav}) => {
+    console.log(nav);
     const [user,setUser]=useState("");
-    const [nav,setNav]=useState(false);
     const navigate=useNavigate();
     useEffect(()=>{
         async function getUser(){
@@ -19,6 +19,7 @@ export const Appbar = () => {
     },[])
 
     function navBar(){
+        console.log("im being clicked");
         setNav((nav)=>!nav);
     }
 

@@ -7,10 +7,10 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios'
 
-export const Signin = () => {
+export const Signin = ({setToken}) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
+  const [warning,setWarning]= useState("");
   const navigate = useNavigate();
 
   return (
@@ -37,16 +37,21 @@ export const Signin = () => {
         />
         <ButtonComponent
           onClick={async () => {
-            const response = await axios.post(
-              "http://localhost:3000/api/v1/user/signin",
-              {
-                username,
-                password,
-              }
-            );
-            localStorage.setItem("token", response.data.token);
-            setUsername("");setPassword("");
-            navigate("/dashboard");
+            try {
+              const response = await axios.post(
+                "http://localhost:3000/api/v1/user/signin",
+                {
+                  username,
+                  password,
+                }
+              );
+              localStorage.setItem("token", response.data.token);
+              setToken(response.data.token);
+              setUsername("");setPassword("");
+              navigate("/dashboard");
+            } catch (error) {
+              setWarning(error.response.data.message);
+            }
           }}
           text={"Log in"}
         />
@@ -55,6 +60,7 @@ export const Signin = () => {
           buttonText={"Sign up"}
           to={"/signup"}
         />
+        {warning && <div className="bg-red-400 rounded-md p-2 mt-2">{warning}</div>}
       </div>
     </div>
   );

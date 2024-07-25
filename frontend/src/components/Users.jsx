@@ -3,7 +3,7 @@ import { ButtonComponent } from "./ButtonComponent";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-export const Users = () => {
+export const Users = ({handleClick}) => {
   const [users, setUsers] = useState([]);
   const [filter, setFilter] = useState("");
 
@@ -20,15 +20,15 @@ export const Users = () => {
   }, [filter]);
 
   return (
-    <div className="px-10">
+    <div className="px-10" onClick={handleClick}>
       <div className="font-bold text-xl">Users</div>
       <input
-        className="mt-4 px-2 py-1 rounded outline-2 outline-gray-300 outline w-full"
+        className="mt-4 px-4 py-1 rounded-2xl outline-2 outline-gray-300 outline w-full"
         type="text"
         onChange={(e) => {
           setFilter(e.target.value);
         }}
-        placeholder="Search users..."
+        placeholder="Search For Contacts"
       />
       <div>
         {users.map((user) => (

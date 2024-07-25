@@ -68,7 +68,8 @@ export const SendMoney = (props) => {
   const [searchParams] = useSearchParams();
   const id = searchParams.get("id");
   const name = searchParams.get("name");
-
+  //If some one tries to access send directly without the parameters
+  if(!id && !name)return("Unauthorized access");
   const [amount, setAmount] = useState(0);
   const [transferStatus, setTransferStatus] = useState(null); // State to track the request status
   const [error, setError] = useState(null); // State to track any errors
@@ -125,17 +126,26 @@ export const SendMoney = (props) => {
           <div className="pl-4 font-bold text-2xl">Paying {name}</div>
         </div>
         <InputBox
-          onChange={(e) => {
-            setAmount(e.target.value);
-          }}
+            onChange={(e) => {
+              const newValue = e.target.value;
+              // Only allow digits and ignore anything else
+              if (/^\d*$/.test(newValue)) {
+                setAmount(newValue);
+              }
+            }}
+          // onChange={(e) => {
+          //   setAmount(e.target.value);
+          // }}
           placeholder={"Enter amount"}
-          type={"number"}
+          type={"text"}
+          value={amount}
         />
         <ButtonComponent
           onClick={handleTransfer} // Use the handler function
+
           text={"Pay"}
         />
-        {error && <div>Insufficient funds</div>}
+        {error && <div className="bg-red-400 rounded-md p-2 mt-2">Insufficient funds</div>}
       </div>
     </div>
   );
